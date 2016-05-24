@@ -1,5 +1,6 @@
 package app.control;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,40 +51,74 @@ public class CatracaController {
 	public HashMap<String, Object> novoEvento(String linhaDigitavel) {
 		HashMap<String, Object> retorno = new HashMap<String, Object>();
 
-		// Caso a linha digitável esteja vazia, ERRO
+		// Caso a linha digitï¿½vel esteja vazia, ERRO
 		if ((linhaDigitavel.equals("")) || (linhaDigitavel == null)) {
 			retorno.put("mensagem",
-					"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 		} else {
 			try {
-				// Busca plástico através da linha digitável
+				// Busca plï¿½stico atravï¿½s da linha digitï¿½vel
 				Plastico plastico = consultarPlastico(linhaDigitavel);
 
-				// Se o plástico existe e está ativo
+				// Se o plï¿½stico existe e estï¿½ ativo
 				if ((plastico != null) && (plastico.getStatus() == Status.ATIVO.toString())) {
 
-					// Se a pessoa existe E ela é aluno E ela está ativa
+					// Se a pessoa existe E ela ï¿½ aluno E ela estï¿½ ativa
 					Pessoa pessoa = plastico.getPessoa();
 					if ((pessoa != null) && (pessoa.getTipopessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
 						List<Evento> eventos = consultarEventosEntrada(pessoa.getId());
 						if (eventos.isEmpty()) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-							Date date1 = sdf.parse("2009-12-31");
-							Date date2 = sdf.parse("2010-01-31");
-							Evento evento = new Evento(new Date(), null, "OK", pessoa);
+							Date now = new Date();
+							String status = comparaEntrada(now);
+							Evento evento = new Evento(now, null, status, pessoa);
+							eventoDao.save(evento);
+							String mensagem = info(pessoa, evento, "ENTRTADA");
+							retorno.put("mensagem", mensagem);
+						} else {
+							Evento evento = eventos.get(0);
+
+							Date now = new Date();
+
+							String status = comparaSaida(now);
+							evento.setDatahorasaida(now);
+							evento.setStatus(status);
+							eventoDao.update(evento);
+							String mensagem = info(pessoa, evento, "SAIDA");
+							retorno.put("mensagem", mensagem);
 						}
 					}
 				} else {
-					retorno.put("mensagem", "Número de cartão não encontrado na base de dados,"
-							+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					retorno.put("mensagem",
+								"NÃºmero de cartÃ£o nÃ£o encontrado na base de dados,"
+												+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
+				retorno.put("mensagem", "houve um erro ao registradar as informaÃ§Ãµes"
+										+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 			}
 		}
 		return retorno;
 
+	}
+
+	private String info(Pessoa pessoa, Evento evento, String tipoMsg) {
+		String mensagem = null;
+
+		if (tipoMsg.equals("ENTRADA")) {
+
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			String dataFormatada = df.format(evento.getDatahoraentrada());
+
+			mensagem = "Bem vindo " + pessoa.getNome() + "\nEntrada registrada as: " + dataFormatada;
+		}else if(tipoMsg.equals("SAIDA")){
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			String dataFormatada = df.format(evento.getDatahorasaida());
+
+			mensagem = pessoa.getNome() + "VocÃª estÃ¡ saindo antes do fim das Aulas de hoje \nEntrada registrada as: " + dataFormatada;
+		}else mensagem = "NÃ£o foi especificado tipo de mensagem";
+		return mensagem;
 	}
 
 	/**
@@ -92,7 +127,7 @@ public class CatracaController {
 	 * @return
 	 * 
 	 */
-	public Plastico consultarPlastico(String linhaDigitavel) {
+	private Plastico consultarPlastico(String linhaDigitavel) {
 		try {
 			Plastico plasticoEncontrado = null;
 			plasticoEncontrado = plasticoDao.findByDigitableLine(linhaDigitavel);
@@ -103,7 +138,7 @@ public class CatracaController {
 		}
 	}
 
-	public boolean alunoAtivo(Long pessoaId) {
+	private boolean alunoAtivo(Long pessoaId) {
 		try {
 			Aluno aluno;
 			boolean estaAtivo = false;
@@ -121,7 +156,7 @@ public class CatracaController {
 		}
 	}
 
-	public List<Evento> consultarEventosEntrada(Long pessoaId) {
+	private List<Evento> consultarEventosEntrada(Long pessoaId) {
 		List<Evento> eventos = new ArrayList<Evento>();
 		try {
 			eventos = eventoDao.findEventByPersonAndDate(pessoaId, Calendar.getInstance().getTime());
@@ -132,26 +167,46 @@ public class CatracaController {
 		}
 	}
 
-	public String comparaEntrada(Date now) {
+	private String comparaEntrada(Date now) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Date entrada;
 		String status = "";
 		try {
 			entrada = sdf.parse(horaEntrada);
-			String hora = getHours() + now.getMinutes() + now.getSeconds();
-			now = sdf.parse();
-			if (now..after(entrada)) {
+			if (now.getHours() <= entrada.getHours()) {
+				if (now.getMinutes() <= entrada.getMinutes()) {
+					status = "OK";
+				} else
+					status = "NOK";
+			} else
 				status = "NOK";
-			} else	status = "OK";
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 			status = "NOK";
 		}
-		return status;	
+		return status;
 	}
 
-	public String comparaSaida() {
+	private String comparaSaida(Date now) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		Date saida;
+		String status = "";
+		try {
+			saida = sdf.parse(horaSaida);
+			if (now.getHours() >= saida.getHours()) {
+				if (now.getMinutes() >= saida.getMinutes()) {
+					status = "OK";
+				} else
+					status = "NOK";
+			} else
+				status = "NOK";
 
+		} catch (ParseException e) {
+			e.printStackTrace();
+			status = "NOK";
+		}
+		return status;
 	}
 
 	public PlasticoDao getPlasticoDao() {
