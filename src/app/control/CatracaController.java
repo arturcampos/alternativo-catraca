@@ -54,27 +54,27 @@ public class CatracaController {
 		// Caso a linha digitï¿½vel esteja vazia, ERRO
 		if ((linhaDigitavel.equals("")) || (linhaDigitavel == null)) {
 			retorno.put("mensagem",
-					"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 		} else {
 			try {
-				// Busca plástico através da linha digitável
-				System.out.println("Buscando Cartão...\n");
+				// Busca plï¿½stico atravï¿½s da linha digitï¿½vel
+				System.out.println("Buscando Cartï¿½o...\n");
 				Plastico plastico = consultarPlastico(linhaDigitavel);
 
-				// Se o plástico existe e está ativo
+				// Se o plï¿½stico existe e estï¿½ ativo
 				if ((plastico != null) && (plastico.getStatus().equals(ATIVO))) {
-					System.out.println("Cartão encontrado! \n");
+					System.out.println("Cartï¿½o encontrado! \n");
 
-					// Se a pessoa existe E ela é aluno E ela está ativa
+					// Se a pessoa existe E ela ï¿½ aluno E ela estï¿½ ativa
 					Pessoa pessoa = plastico.getPessoa();
 					if ((pessoa != null) && (pessoa.getTipopessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
-						System.out.println("Pessoa Existe e é aluno ativo");
+						System.out.println("Pessoa Existe e ï¿½ aluno ativo");
 						List<Evento> eventos = consultarEventosEntrada(pessoa.getId());
 						if (eventos.isEmpty()) {
-							System.out.println("Não há eventos para o dia. Registrando entrada...");
+							System.out.println("Nï¿½o hï¿½ eventos para o dia. Registrando entrada...");
 							Date now = new Date();
 
-							System.out.println("Validando horário de entrada para criar status do Evento.");
+							System.out.println("Validando horï¿½rio de entrada para criar status do Evento.");
 							String status = comparaEntrada(now);
 							System.out.println(status);
 							Evento evento = new Evento(now, null, status, pessoa);
@@ -96,14 +96,15 @@ public class CatracaController {
 						}
 					}
 				} else {
-					retorno.put("mensagem", "Número de cartão não encontrado na base de dados,"
-							+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					retorno.put("mensagem",
+								"Nï¿½mero de cartï¿½o nï¿½o encontrado na base de dados,"
+												+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				retorno.put("mensagem", "Houve um erro ao registradar as informações"
-						+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+				retorno.put("mensagem", "Houve um erro ao registradar as informaï¿½ï¿½es"
+										+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 			}
 		}
 		return retorno;
@@ -123,10 +124,10 @@ public class CatracaController {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDatahorasaida());
 
-			mensagem = pessoa.getNome() + " Você saindo antes do fim das Aulas de hoje \nSaida registrada: "
-					+ dataFormatada;
+			mensagem = pessoa.getNome() + " VocÃª saindo antes do fim das Aulas de hoje \nSaida registrada: "
+						+ dataFormatada;
 		} else
-			mensagem = "Não foi especificado tipo de mensagem";
+			mensagem = "Nï¿½o foi especificado tipo de mensagem";
 		return mensagem;
 	}
 
@@ -176,7 +177,7 @@ public class CatracaController {
 		}
 	}
 
-	private String comparaEntrada(Date now)throws ParseException {
+	private String comparaEntrada(Date now) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Date entrada;
 		String status = "";
@@ -186,33 +187,29 @@ public class CatracaController {
 				status = "OK";
 			} else
 				status = "NOK";
-		} else if(now.getHours() < entrada.getHours()){
+		} else if (now.getHours() < entrada.getHours()) {
 			status = "OK";
-		}else
+		} else
 			status = "NOK";
 
 		return status;
 
 	}
 
-	private String comparaSaida(Date now) {
+	private String comparaSaida(Date now)throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Date saida;
 		String status = "";
-		try {
 			saida = sdf.parse(horaSaida);
-			if (now.getHours() >= saida.getHours()) {
+			if (now.getHours() == saida.getHours()) {
 				if (now.getMinutes() >= saida.getMinutes()) {
 					status = "OK";
 				} else
 					status = "NOK";
-			} else
+			} else if(now.getHours() < saida.getHours()){
 				status = "NOK";
+		}else status = "OK";
 
-		} catch (ParseException e) {
-			e.printStackTrace();
-			status = "NOK";
-		}
 		return status;
 	}
 
