@@ -8,24 +8,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 
 /**
  * The persistent class for the plastico database table.
  * 
  */
 @Entity
-@Table(name="Plastico", schema="futurodb")
-@NamedQuery(name="Plastico.findAll", query="SELECT p FROM Plastico p")
+@Table(name = "Plastico", schema = "futurodb")
+@NamedQueries({ @NamedQuery(name = "Plastico.findAll", query = "SELECT p FROM Plastico p"),
+		@NamedQuery(name = "Plastico.findByDigitableLine", query = "SELECT p FROM Plastico p WHERE p.linhadigitavel = :wantedDigitableLine") })
 public class Plastico implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -35,7 +36,7 @@ public class Plastico implements Serializable {
 
 	private String status;
 
-	//bi-directional many-to-one association to Pessoa
+	// bi-directional many-to-one association to Pessoa
 	@ManyToOne
 	private Pessoa pessoa;
 

@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
 
 @NamedQueries({ 
 	@NamedQuery(name = "Documento.findAll", query = "SELECT d FROM Documento d"),
-	@NamedQuery(name = "Documento.findByPersonId", query = "SELECT d FROM Documento d WHERE d.pessoa_id = :personId")
+	@NamedQuery(name = "Documento.findByPersonId", query = "SELECT d FROM Documento d WHERE d.pessoa.id = :personId")
 })
 public class Documento implements Serializable {
 	private static final long serialVersionUID = 1L;

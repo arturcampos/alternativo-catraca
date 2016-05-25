@@ -8,7 +8,7 @@ public class JpaUtil {
 
 	private static EntityManagerFactory factory;
 	static {
-		factory = Persistence.createEntityManagerFactory("alternativowebPU");
+		factory = Persistence.createEntityManagerFactory("alternativo-catraca-PU");
 	}
 
 	public static EntityManager getEntityManager() {

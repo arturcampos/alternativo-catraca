@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Table(name = "Endereco", schema = "futurodb")
 @NamedQueries({ 
 	@NamedQuery(name = "Endereco.findAll", query = "SELECT e FROM Endereco e"),
-	@NamedQuery(name = "Endereco.findByPersonId", query = "SELECT e FROM Endereco e WHERE e.Pessoa_id = :personId")
+	@NamedQuery(name = "Endereco.findByPersonId", query = "SELECT e FROM Endereco e WHERE e.pessoa.id = :personId")
 })
 
 public class Endereco implements Serializable {

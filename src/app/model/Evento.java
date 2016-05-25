@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "Evento", schema = "futurodb")
 @NamedQueries({ @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
-		@NamedQuery(name = "Evento.findEventByPersonAndDate", query = "SELECT e FROM Evento e WHERE e.pessoa_id = :personId and format_date('dd/MM/yyyy', datahoraentrada) = format_date('dd/MM/yyyy', :date) and datahorasaida IS NULL")})
+		@NamedQuery(name = "Evento.findEventByPersonAndDate", query = "SELECT e FROM Evento e WHERE e.pessoa.id = :personId and date_format(datahoraentrada, 'dd/MM/yyyy') = date_format(:date, 'dd/MM/yyyy') and datahorasaida IS NULL")})
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
 

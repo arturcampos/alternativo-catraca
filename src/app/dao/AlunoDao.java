@@ -17,6 +17,6 @@ public class AlunoDao extends DaoImpl<Aluno> {
 
 	public List<Aluno> findByPersonId(Long id) throws Exception{
 		return (List<Aluno>) entitymanager.createNamedQuery("Aluno.findByPersonId", Aluno.class)
-				.setParameter("personId", id).getResultList();
+				.setParameter("wantedPersonId", id).getResultList();
 	}
 }
