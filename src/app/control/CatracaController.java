@@ -97,14 +97,15 @@ public class CatracaController {
 					}
 				} else {
 					retorno.put("mensagem",
-								"Nï¿½mero de cartï¿½o nï¿½o encontrado na base de dados,"
+								(Object)"Número de cartão não encontrado na base de dados,"
 												+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				retorno.put("mensagem", "Houve um erro ao registradar as informaï¿½ï¿½es"
+				retorno.put("mensagem", "Houve um erro ao registradar as informações"
 										+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+				System.err.println(retorno.get("mensagem"));
 			}
 		}
 		return retorno;
@@ -135,7 +136,7 @@ public class CatracaController {
 	 * @author ARTUR
 	 * @param linhaDigitavel
 	 * @return
-	 * 
+	 *
 	 */
 	private Plastico consultarPlastico(String linhaDigitavel) {
 		try {

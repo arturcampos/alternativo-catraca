@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.control.EventHandlerController">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="42.0" layoutY="14.0" prefHeight="79.0" prefWidth="497.0" text="Futuro Pré-Vestibular Alternativo">
+         <font>
+            <Font name="Comic Sans MS" size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="matriculaTextField" alignment="CENTER" layoutX="56.0" layoutY="319.0" onKeyPressed="#handleKeyPressed" prefHeight="44.0" prefWidth="479.0" promptText="Passe Seu Cartão ...">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </TextField>
+      <Label fx:id="retornoLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="55.0" layoutY="113.0" prefHeight="173.0" prefWidth="479.0" textFill="#048f59" textOverrun="ELLIPSIS" wrapText="true">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+   </children>
+</AnchorPane>
