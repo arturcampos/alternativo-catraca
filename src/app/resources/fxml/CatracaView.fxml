@@ -13,12 +13,12 @@
             <Font name="Comic Sans MS" size="30.0" />
          </font>
       </Label>
-      <TextField fx:id="matriculaTextField" alignment="CENTER" layoutX="56.0" layoutY="319.0" onKeyPressed="#handleKeyPressed" prefHeight="44.0" prefWidth="479.0" promptText="Passe Seu Cartão ...">
+      <TextField fx:id="matriculaTextField" alignment="CENTER" layoutX="61.0" layoutY="319.0" onKeyPressed="#handleKeyPressed" prefHeight="44.0" prefWidth="479.0" promptText="Passe Seu Cartão ...">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </TextField>
-      <Label fx:id="retornoLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="55.0" layoutY="113.0" prefHeight="173.0" prefWidth="479.0" textFill="#048f59" textOverrun="ELLIPSIS" wrapText="true">
+      <Label fx:id="retornoLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="66.0" layoutY="113.0" prefHeight="173.0" prefWidth="479.0" textFill="#048f59" textOverrun="ELLIPSIS" wrapText="true">
          <font>
             <Font size="22.0" />
          </font>

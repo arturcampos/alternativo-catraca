@@ -1,7 +1,5 @@
 package app.view;
 
-import org.aerofx.AeroFX;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,12 +11,12 @@ public class CatracaView extends Application{
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+
+			setUserAgentStylesheet(STYLESHEET_CASPIAN);
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("../resources/fxml/CatracaView.fxml"));
 			Scene scene = new Scene(root,600,400);
-			//scene.getStylesheets().add(getClass().getResource("../resource/application.css").toExternalForm());
-			AeroFX.style();
+			//scene.getStylesheets().add(getClass().getResource("../resources/fxml/application.css").toExternalForm());
 			primaryStage.setScene(scene);
-
 			primaryStage.show();
 
 		} catch(Exception e) {
