@@ -110,7 +110,7 @@ public class CatracaController {
 							Evento evento;
 
 							if (eventos.size() > 1) {
-								evento = eventos.get(eventos.size());
+								evento = eventos.get(eventos.size()-1);
 								logger.info(
 										"Existe mais de 1 evento para este cartão no dia de hoje, apenas o evento mais recente será atualizado");
 							} else {
