@@ -53,16 +53,16 @@ public class CatracaController {
 		logger.info("Inicializando classes de DAO ...");
 		synchronized (CatracaController.class) {
 			if (plasticoDao == null) {
-				plasticoDao = new PlasticoDao(Plastico.class);
+				plasticoDao = new PlasticoDao();
 			}
 			if (pessoaDao == null) {
-				pessoaDao = new PessoaDao(Pessoa.class);
+				pessoaDao = new PessoaDao();
 			}
 			if (alunoDao == null) {
-				alunoDao = new AlunoDao(Aluno.class);
+				alunoDao = new AlunoDao();
 			}
 			if (eventoDao == null) {
-				eventoDao = new EventoDao(Evento.class);
+				eventoDao = new EventoDao();
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 package jar.dao;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -12,10 +13,10 @@ import java.util.List;
  */
 public interface IDao<T> {
 
-	public void save(T obj);
-	public T remove(Serializable id);
-	public List<T> findAll();
-	public T findById(Serializable id);
-	public void update(T obj);
+	public void save(T obj) throws SQLException;
+	public T remove(Serializable id) throws SQLException;
+	public List<T> findAll() throws SQLException;
+	public T findById(Serializable id) throws SQLException;
+	public void update(T obj) throws SQLException;
 
 }

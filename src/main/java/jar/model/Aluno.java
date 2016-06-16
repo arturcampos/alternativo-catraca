@@ -20,50 +20,38 @@ import javax.persistence.TemporalType;
  * The persistent class for the aluno database table.
  *
  */
-@Entity
-@Table(name = "aluno", schema = "futurodb")
-@NamedQueries({ @NamedQuery(name = "Aluno.findAll", query = "SELECT a FROM Aluno a"),
-		@NamedQuery (name="Aluno.findByPersonId", query="SELECT a FROM Aluno a WHERE a.pessoa.id = :wantedPersonId")})
 public class Aluno implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataEgresso;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataIngresso;
 
 	private String matricula;
 
 	private int tipoCotaIngresso;
 
-	// bi-directional many-to-one association to Turma
-	@ManyToOne
-	private Turma turma;
+	private Long turmaId;
 
-	// bi-directional one-to-one association to Pessoa
-	@OneToOne(cascade=CascadeType.PERSIST)
-	private Pessoa pessoa;
+	private Long pessoaId;
 
 	private String status;
 
 	public Aluno() {
 	}
 
-	public Aluno(Long id, Date dataEgresso, Date dataIngresso, String matricula, int tipoCotaIngresso, Turma turma,
-			Pessoa pessoa, String status) {
+	public Aluno(Long id, Date dataEgresso, Date dataIngresso, String matricula, int tipoCotaIngresso, Long turmaId,
+			Long pessoaId, String status) {
 		super();
 		this.id = id;
 		this.dataEgresso = dataEgresso;
 		this.dataIngresso = dataIngresso;
 		this.matricula = matricula;
 		this.tipoCotaIngresso = tipoCotaIngresso;
-		this.turma = turma;
-		this.pessoa = pessoa;
+		this.turmaId = turmaId;
+		this.pessoaId = pessoaId;
 		this.status = status;
 	}
 
@@ -107,20 +95,20 @@ public class Aluno implements Serializable {
 		this.tipoCotaIngresso = tipoCotaIngresso;
 	}
 
-	public Turma getTurma() {
-		return this.turma;
+	public Long getTurmaId() {
+		return this.turmaId;
 	}
 
-	public void setTurma(Turma turma) {
-		this.turma = turma;
+	public void setTurmaId(Long turmaId) {
+		this.turmaId = turmaId;
 	}
 
-	public Pessoa getPessoa() {
-		return this.pessoa;
+	public Long getPessoaId() {
+		return this.pessoaId;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public void setPessoaId(Long pessoaId) {
+		this.pessoaId = pessoaId;
 	}
 
 	public void setStatus(String status) {
@@ -133,7 +121,7 @@ public class Aluno implements Serializable {
 
 	@Override
 	public Aluno clone() {
-		return new Aluno(id, dataEgresso, dataIngresso, matricula, tipoCotaIngresso, turma, pessoa, status);
+		return new Aluno(id, dataEgresso, dataIngresso, matricula, tipoCotaIngresso, turmaId, pessoaId, status);
 	}
 
 	public void restaurar(Aluno aluno) {
@@ -142,8 +130,8 @@ public class Aluno implements Serializable {
 		this.dataIngresso = aluno.getDataIngresso();
 		this.matricula = aluno.getMatricula();
 		this.tipoCotaIngresso = aluno.getTipoCotaIngresso();
-		this.turma = aluno.getTurma();
-		this.pessoa = aluno.getPessoa();
+		this.turmaId = aluno.getTurmaId();
+		this.pessoaId = aluno.getPessoaId();
 		this.status = aluno.getStatus();
 	}
 
