@@ -9,25 +9,23 @@ import javafx.stage.Stage;
 
 public class CatracaView extends Application{
 
+	public static void main(String[] args) {
+		launch(args);
+
+	}
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 
 			setUserAgentStylesheet(STYLESHEET_CASPIAN);
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("../resources/fxml/CatracaView.fxml"));
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/view/CatracaView.fxml"));
 			Scene scene = new Scene(root,600,400);
 			primaryStage.setScene(scene);
-			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("../resources/image/catraca.jpg")));
+			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/view/catraca.jpg")));
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-
-
 }

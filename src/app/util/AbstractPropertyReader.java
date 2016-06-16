@@ -19,7 +19,7 @@ public abstract class AbstractPropertyReader {
 		InputStream input = null;
 
 		try {
-			String filePath = "C:/CatracaProperties/catracaConfig.properties";
+			String filePath = System.getenv("PROPERTIES_HOME") + "/catracaConfig.properties";
 
 			input = new FileInputStream(filePath);
 			logger.info("Arquivo de propriedades encontradao em '" + filePath + "'");
