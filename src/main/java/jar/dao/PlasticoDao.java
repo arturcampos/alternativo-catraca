@@ -1,27 +1,91 @@
 package jar.dao;
 
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
 import jar.model.Plastico;
+import jar.util.JpaUtil;
 
-public class PlasticoDao extends DaoImpl<Plastico> {
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
-	public PlasticoDao(Class<Plastico> clazz) {
-		super(clazz);
+import org.apache.log4j.Logger;
+
+public class PlasticoDao implements IDao<Plastico> {
+
+	static Logger logger = Logger.getLogger(EventoDao.class);
+	private Connection dbConnection;
+
+	/**
+	 *
+	 */
+	public PlasticoDao() {
+		synchronized (PlasticoDao.class) {
+			if (dbConnection == null) {
+				dbConnection = JpaUtil.getDBConnection();
+			}
+		}
 	}
 
-	public Plastico findByDigitableLine(String digitableLine){
-		Query query = entitymanager.createNamedQuery("Plastico.findByDigitableLine")
-				.setParameter("wantedDigitableLine", digitableLine);
-		try{
-			Plastico p = (Plastico) query.getSingleResult();
-			return p;
-		}catch(NoResultException e){
-			System.err.println(e.getMessage());
-			return null;
-		}
+	public Plastico findByDigitableLine(String digitableLine) throws SQLException {
+		String selectSQL = "SELECT p.id, p.linhadigitavel, p.datacadastro, p.status, p.Pessoa_id"
+						+ " FROM Plastico p WHERE p.linhadigitavel = ?";
+		PreparedStatement ps = null;
+		Plastico plastico = null;
+		try {
+			ps = dbConnection.prepareStatement(selectSQL);
+			ps.setString(1, digitableLine);
+			ResultSet rs = ps.executeQuery();
 
+			while (rs.next()) {
+				plastico = new Plastico();
+				plastico.setId(rs.getLong("id"));
+				plastico.setLinhaDigitavel(rs.getString("linhadigitavel"));
+				plastico.setDataCadastro(rs.getDate("datacadastro"));
+				plastico.setPessoaId(rs.getLong("Pessoa_id"));
+				plastico.setStatus(rs.getString("status"));
+			}
+		} catch (SQLException e) {
+			logger.error("Erro ao buscar plastico:\n", e);
+		} finally {
+			if (ps != null) {
+				ps.close();
+			}
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+		}
+		return plastico;
+	}
+
+	@Override
+	public void save(Plastico obj) throws SQLException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Plastico remove(Serializable id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Plastico> findAll() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Plastico findById(Serializable id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update(Plastico obj) throws SQLException {
+		// TODO Auto-generated method stub
 
 	}
 

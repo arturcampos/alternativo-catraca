@@ -18,27 +18,15 @@ import javax.persistence.TemporalType;
  * The persistent class for the plastico database table.
  *
  */
-@Entity
-@Table(name = "Plastico", schema = "futurodb")
-@NamedQueries({ @NamedQuery(name = "Plastico.findAll", query = "SELECT p FROM Plastico p"),
-		@NamedQuery(name = "Plastico.findByDigitableLine", query = "SELECT p FROM Plastico p WHERE p.linhadigitavel = :wantedDigitableLine") })
+
 public class Plastico implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date datacadastro;
-
-	private String linhadigitavel;
-
+	private Date dataCadastro;
+	private String linhaDigitavel;
 	private String status;
-
-	// bi-directional many-to-one association to Pessoa
-	@ManyToOne
-	private Pessoa pessoa;
+	private Long pessoaId;
 
 	public Plastico() {
 	}
@@ -51,20 +39,20 @@ public class Plastico implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDatacadastro() {
-		return this.datacadastro;
+	public Date getDataCadastro() {
+		return this.dataCadastro;
 	}
 
-	public void setDatacadastro(Date datacadastro) {
-		this.datacadastro = datacadastro;
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 
-	public String getLinhadigitavel() {
-		return this.linhadigitavel;
+	public String getLinhaDigitavel() {
+		return this.linhaDigitavel;
 	}
 
-	public void setLinhadigitavel(String linhadigitavel) {
-		this.linhadigitavel = linhadigitavel;
+	public void setLinhaDigitavel(String linhaDigitavel) {
+		this.linhaDigitavel = linhaDigitavel;
 	}
 
 	public String getStatus() {
@@ -75,12 +63,12 @@ public class Plastico implements Serializable {
 		this.status = status;
 	}
 
-	public Pessoa getPessoa() {
-		return this.pessoa;
+	public Long getPessoaId() {
+		return this.pessoaId;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public void setPessoaId(Long pessoaId) {
+		this.pessoaId = pessoaId;
 	}
 
 }

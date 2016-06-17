@@ -1,17 +1,5 @@
 package jar;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-
 import jar.dao.AlunoDao;
 import jar.dao.EventoDao;
 import jar.dao.PessoaDao;
@@ -23,6 +11,19 @@ import jar.model.Plastico;
 import jar.util.AbstractPropertyReader;
 import jar.util.Status;
 import jar.util.TipoPessoa;
+
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
 
 public class CatracaController {
 
@@ -74,7 +75,7 @@ public class CatracaController {
 		// Caso a linha digitável esteja vazia, ERRO
 		if ((linhaDigitavel.equals("")) || (linhaDigitavel == null)) {
 			retorno.put("mensagem",
-					"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 			logger.error(retorno.get("mensagem"));
 		} else {
 			try {
@@ -87,19 +88,16 @@ public class CatracaController {
 					logger.info("Cartão encontrado!");
 
 					// Se a pessoa existe E ela é aluno E ela está ativa
-					Pessoa pessoa = plastico.getPessoa();
-					if ((pessoa != null) && (pessoa.getTipopessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
-						logger.info("Pessoa Existe e é um aluno ativo");
-						logger.info("Buscando Eventos ...");
+					Pessoa pessoa = pessoaDao.findById(plastico.getPessoaId());
+					if ((pessoa != null) && (pessoa.getTipoPessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
+						logger.info("Pessoa Existe e é um aluno ativo \n\nBuscando Eventos ...");
 						List<Evento> eventos = consultarEventosEntrada(pessoa.getId());
-						if (eventos.isEmpty()) {
-							logger.info("Não hã eventos para o dia. Registrando nova entrada...");
+						if (eventos.isEmpty() || eventos == null) {
+							logger.info("Não há eventos para o dia. Registrando nova entrada...");
 							Date now = new Date();
 
-							logger.info("Validando horário de entrada para criar status do Evento.");
 							String status = comparaEntrada(now);
-							logger.info("Status = " + status);
-							Evento evento = new Evento(now, null, status, pessoa);
+							Evento evento = new Evento(now, null, status, pessoa.getId());
 							logger.info("Salvando novo envento entrada");
 							eventoDao.save(evento);
 							logger.info("Evento criado com sucesso...");
@@ -110,9 +108,8 @@ public class CatracaController {
 							Evento evento;
 
 							if (eventos.size() > 1) {
-								evento = eventos.get(eventos.size()-1);
-								logger.info(
-										"Existe mais de 1 evento para este cartão no dia de hoje, apenas o evento mais recente será atualizado");
+								evento = eventos.get(eventos.size() - 1);
+								logger.info("Existe mais de 1 evento para este cartão no dia de hoje, apenas o evento mais recente será atualizado");
 							} else {
 								evento = eventos.get(0);
 							}
@@ -122,24 +119,25 @@ public class CatracaController {
 							logger.info("Validando horário de Saída para criar status do Evento.");
 							String status = comparaSaida(now);
 							logger.info("Status = " + status);
-							evento.setDatahorasaida(now);
+							evento.setDataHoraSaida(now);
 							evento.setStatus(status);
 							logger.info("Salvando novo envento saída");
-							eventoDao.update(evento);
+							update(evento);
 							String mensagem = info(pessoa, evento, "SAIDA");
 							retorno.put("mensagem", mensagem);
 							logger.info(mensagem);
 						}
 					}
 				} else {
-					retorno.put("mensagem", (Object) "Número de cartão não encontrado na base de dados,"
-							+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					retorno.put("mensagem",
+								(Object) "Número de cartão não encontrado na base de dados,"
+												+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				retorno.put("mensagem", "Houve um erro ao registradar as informações"
-						+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+										+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 				System.err.println(retorno.get("mensagem"));
 			}
 		}
@@ -153,15 +151,15 @@ public class CatracaController {
 		if (tipoMsg.equals("ENTRADA")) {
 
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			String dataFormatada = df.format(evento.getDatahoraentrada());
+			String dataFormatada = df.format(evento.getDataHoraEntrada());
 
 			mensagem = "Bem vindo " + pessoa.getNome() + "\nEntrada registrada: " + dataFormatada;
 		} else if (tipoMsg.equals("SAIDA")) {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			String dataFormatada = df.format(evento.getDatahorasaida());
+			String dataFormatada = df.format(evento.getDataHoraSaida());
 
 			mensagem = pessoa.getNome() + " você está saindo antes do fim das Aulas de hoje \nSaida registrada: "
-					+ dataFormatada;
+						+ dataFormatada;
 		} else
 			mensagem = "Não foi especificado tipo de mensagem";
 		return mensagem;
@@ -213,8 +211,22 @@ public class CatracaController {
 		}
 	}
 
+	private void update(Evento novoEvento) {
+		try{
+			Evento eventoSalvo = eventoDao.findById(novoEvento.getId());
+			if (novoEvento.equals(eventoSalvo)) {
+				logger.info("Atualizando evento com data final e status ...");
+				eventoDao.update(novoEvento);
+			} else {
+				logger.info("Evento Não encontrado para atualização ..");
+			}
+		}catch(SQLException e){
+			logger.error("Erro ao atualizar evento ", e);
+		}
+	}
+
 	private String comparaEntrada(Date now) throws ParseException {
-		logger.info("Comparando datas");
+		logger.info("Validando horário de entrada para criar status do Evento.");
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Date entrada;
 		String status = "";

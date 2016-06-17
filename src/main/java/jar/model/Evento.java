@@ -1,55 +1,29 @@
 package jar.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the evento database table.
  *
- */
-@Entity
-@Table(name = "Evento", schema = "futurodb")
-@NamedQueries({ @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
-		@NamedQuery(name = "Evento.findEventByPersonAndDate", query = "SELECT e FROM Evento e WHERE e.pessoa.id = :personId and date_format(datahoraentrada, 'dd/MM/yyyy') = date_format(:date, 'dd/MM/yyyy') and datahorasaida IS NULL")})
+ */	
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date datahoraentrada;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date datahorasaida;
-
-	// bi-directional many-to-one association to Pessoa
-	@ManyToOne
-	private Pessoa pessoa;
-
+	private Date dataHoraEntrada;
+	private Date dataHoraSaida;
+	private Long pessoaId;
 	private String status;
 
 	public Evento() {
 	}
 
-	public Evento(Date entrada, Date saida, String status, Pessoa pessoa) {
-		this.datahoraentrada = entrada;
-		this.datahorasaida = saida;
+	public Evento(Date entrada, Date saida, String status, Long pessoaId) {
+		this.dataHoraEntrada = entrada;
+		this.dataHoraSaida = saida;
 		this.status = status;
-		this.pessoa = pessoa;
+		this.pessoaId = pessoaId;
 	}
 
 	public Long getId() {
@@ -60,28 +34,28 @@ public class Evento implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDatahoraentrada() {
-		return this.datahoraentrada;
+	public Date getDataHoraEntrada() {
+		return this.dataHoraEntrada;
 	}
 
-	public void setDatahoraentrada(Date datahoraentrada) {
-		this.datahoraentrada = datahoraentrada;
+	public void setDataHoraEntrada(Date dataHoraEntrada) {
+		this.dataHoraEntrada = dataHoraEntrada;
 	}
 
-	public Date getDatahorasaida() {
-		return this.datahorasaida;
+	public Date getDataHoraSaida() {
+		return this.dataHoraSaida;
 	}
 
-	public void setDatahorasaida(Date datahorasaida) {
-		this.datahorasaida = datahorasaida;
+	public void setDataHoraSaida(Date dataHoraSaida) {
+		this.dataHoraSaida = dataHoraSaida;
 	}
 
-	public Pessoa getPessoa() {
-		return this.pessoa;
+	public Long getPessoaId() {
+		return this.pessoaId;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public void setPessoaId(Long pessoaId) {
+		this.pessoaId = pessoaId;
 	}
 
 	public String getStatus() {
@@ -90,6 +64,43 @@ public class Evento implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((pessoaId == null) ? 0 : pessoaId.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Evento other = (Evento) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (pessoaId == null) {
+			if (other.pessoaId != null)
+				return false;
+		} else if (!pessoaId.equals(other.pessoaId))
+			return false;
+		return true;
 	}
 
 }

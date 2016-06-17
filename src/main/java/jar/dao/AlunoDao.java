@@ -42,6 +42,7 @@ public class AlunoDao implements IDao<Aluno> {
 		List<Aluno> alunos = new  ArrayList<Aluno>();
 		try {
 			ps = dbConnection.prepareStatement(selectSQL);
+			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()) {

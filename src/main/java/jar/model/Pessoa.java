@@ -25,52 +25,22 @@ import javax.persistence.TemporalType;
 public class Pessoa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Temporal(TemporalType.DATE)
 	private Date dataNasc;
-
 	private String email;
-
 	private String estadoCivil;
-
 	private String etnia;
-
 	private String nacionalidade;
-
 	private String naturalidade;
-
 	private String necessidadesEspeciais;
-
 	private String nome;
-
 	private String nomeMae;
-
 	private String nomePai;
-
 	private String numeroCelular;
-
 	private String responsavelLegal;
-
 	private String sexo;
-
 	private String uf;
-
-	// bi-directional many-to-one association to Documento
-	@OneToMany(mappedBy = "pessoa", cascade=CascadeType.ALL)
-	private List<Documento> documentos;
-
-	// bi-directional many-to-one association to Endereco
-	@OneToMany(mappedBy = "pessoa", cascade=CascadeType.ALL)
-	private List<Endereco> enderecos;
-
-	// bi-directional many-to-one association to Plastico
-	@OneToMany(mappedBy = "pessoa", cascade=CascadeType.ALL)
-	private List<Plastico> plasticos;
-
-	private String tipopessoa;
+	private String tipoPessoa;
 
 	public Pessoa() {
 	}
@@ -99,8 +69,7 @@ public class Pessoa implements Serializable {
 	 */
 	public Pessoa(Long id, Date dataNasc, String email, String estadoCivil, String etnia, String nacionalidade,
 			String naturalidade, String necessidadesEspeciais, String nome, String nomeMae, String nomePai,
-			String numeroCelular, String responsavelLegal, String sexo, String uf, List<Documento> documentos,
-			List<Endereco> enderecos, List<Plastico> plasticos, String tipopessoa) {
+			String numeroCelular, String responsavelLegal, String sexo, String uf, String tipopessoa) {
 		super();
 		this.id = id;
 		this.dataNasc = dataNasc;
@@ -117,10 +86,7 @@ public class Pessoa implements Serializable {
 		this.responsavelLegal = responsavelLegal;
 		this.sexo = sexo;
 		this.uf = uf;
-		this.documentos = documentos;
-		this.enderecos = enderecos;
-		this.plasticos = plasticos;
-		this.tipopessoa = tipopessoa;
+		this.tipoPessoa = tipopessoa;
 	}
 
 	public Long getId() {
@@ -131,12 +97,12 @@ public class Pessoa implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDatanasc() {
+	public Date getDataNasc() {
 		return this.dataNasc;
 
 	}
 
-	public void setDatanasc(Date dataNasc) {
+	public void setDataNasc(Date dataNasc) {
 		this.dataNasc = dataNasc;
 	}
 
@@ -148,11 +114,11 @@ public class Pessoa implements Serializable {
 		this.email = email;
 	}
 
-	public String getEstadocivil() {
+	public String getEstadoCivil() {
 		return this.estadoCivil;
 	}
 
-	public void setEstadocivil(String estadoCivil) {
+	public void setEstadoCivil(String estadoCivil) {
 		this.estadoCivil = estadoCivil;
 	}
 
@@ -180,11 +146,11 @@ public class Pessoa implements Serializable {
 		this.naturalidade = naturalidade;
 	}
 
-	public String getNecessidadesespeciais() {
+	public String getNecessidadesEspeciais() {
 		return this.necessidadesEspeciais;
 	}
 
-	public void setNecessidadesespeciais(String necessidadesEspeciais) {
+	public void setNecessidadesEspeciais(String necessidadesEspeciais) {
 		this.necessidadesEspeciais = necessidadesEspeciais;
 	}
 
@@ -196,35 +162,35 @@ public class Pessoa implements Serializable {
 		this.nome = nome;
 	}
 
-	public String getNomemae() {
+	public String getNomeMae() {
 		return this.nomeMae;
 	}
 
-	public void setNomemae(String nomeMae) {
+	public void setNomeMae(String nomeMae) {
 		this.nomeMae = nomeMae;
 	}
 
-	public String getNomepai() {
+	public String getNomePai() {
 		return this.nomePai;
 	}
 
-	public void setNomepai(String nomePai) {
+	public void setNomePai(String nomePai) {
 		this.nomePai = nomePai;
 	}
 
-	public String getNumerocelular() {
+	public String getNumeroCelular() {
 		return this.numeroCelular;
 	}
 
-	public void setNumerocelular(String numeroCelular) {
+	public void setNumeroCelular(String numeroCelular) {
 		this.numeroCelular = numeroCelular;
 	}
 
-	public String getResponsavellegal() {
+	public String getResponsavelLegal() {
 		return this.responsavelLegal;
 	}
 
-	public void setResponsavellegal(String responsavelLegal) {
+	public void setResponsavelLegal(String responsavelLegal) {
 		this.responsavelLegal = responsavelLegal;
 	}
 
@@ -244,108 +210,38 @@ public class Pessoa implements Serializable {
 		this.uf = uf;
 	}
 
-	public List<Documento> getDocumentos() {
-		return this.documentos;
+	public String getTipoPessoa() {
+		return this.tipoPessoa;
 	}
 
-	public void setDocumentos(List<Documento> documentos) {
-		this.documentos = documentos;
-	}
-
-	public Documento addDocumento(Documento documento) {
-		getDocumentos().add(documento);
-		documento.setPessoa(this);
-
-		return documento;
-	}
-
-	public Documento removeDocumento(Documento documento) {
-		getDocumentos().remove(documento);
-		documento.setPessoa(null);
-
-		return documento;
-	}
-
-	public List<Endereco> getEnderecos() {
-		return this.enderecos;
-	}
-
-	public void setEnderecos(List<Endereco> enderecos) {
-		this.enderecos = enderecos;
-	}
-
-	public Endereco addEndereco(Endereco endereco) {
-		getEnderecos().add(endereco);
-		endereco.setPessoa(this);
-
-		return endereco;
-	}
-
-	public Endereco removeEndereco(Endereco endereco) {
-		getEnderecos().remove(endereco);
-		endereco.setPessoa(null);
-
-		return endereco;
-	}
-
-	public List<Plastico> getPlasticos() {
-		return this.plasticos;
-	}
-
-	public void setPlasticos(List<Plastico> plasticos) {
-		this.plasticos = plasticos;
-	}
-
-	public Plastico addPlastico(Plastico plastico) {
-		getPlasticos().add(plastico);
-		plastico.setPessoa(this);
-
-		return plastico;
-	}
-
-	public Plastico removePlastico(Plastico plastico) {
-		getPlasticos().remove(plastico);
-		plastico.setPessoa(null);
-
-		return plastico;
-	}
-
-	public String getTipopessoa() {
-		return this.tipopessoa;
-	}
-
-	public void setTipopessoa(String tipopessoa) {
-		this.tipopessoa = tipopessoa;
+	public void setTipoPessoa(String tipopessoa) {
+		this.tipoPessoa = tipopessoa;
 	}
 
 	@Override
 	public Pessoa clone() {
 		return new Pessoa(this.id, this.dataNasc, this.email, this.estadoCivil, this.etnia, this.nacionalidade,
 				this.naturalidade, this.necessidadesEspeciais, this.nome, this.nomeMae, this.nomePai,
-				this.numeroCelular, this.responsavelLegal, this.sexo, this.uf, this.documentos, this.enderecos,
-				this.plasticos, this.tipopessoa);
+				this.numeroCelular, this.responsavelLegal, this.sexo, this.uf, this.tipoPessoa);
 	}
 
 	public void restaurar(Pessoa pessoa) {
 		this.id = pessoa.getId();
-		this.dataNasc = pessoa.getDatanasc();
+		this.dataNasc = pessoa.getDataNasc();
 		this.email = pessoa.getEmail();
-		this.estadoCivil = pessoa.getEstadocivil();
+		this.estadoCivil = pessoa.getEstadoCivil();
 		this.etnia = pessoa.getEtnia();
 		this.nacionalidade = pessoa.getNacionalidade();
 		this.naturalidade = pessoa.getNaturalidade();
-		this.necessidadesEspeciais = pessoa.getNecessidadesespeciais();
+		this.necessidadesEspeciais = pessoa.getNecessidadesEspeciais();
 		this.nome = pessoa.getNome();
-		this.nomeMae = pessoa.getNomemae();
-		this.nomePai = pessoa.getNomepai();
-		this.numeroCelular = pessoa.getNumerocelular();
-		this.responsavelLegal = pessoa.getResponsavellegal();
+		this.nomeMae = pessoa.getNomeMae();
+		this.nomePai = pessoa.getNomePai();
+		this.numeroCelular = pessoa.getNumeroCelular();
+		this.responsavelLegal = pessoa.getResponsavelLegal();
 		this.sexo = pessoa.getSexo();
 		this.uf = pessoa.getUf();
-		this.documentos = pessoa.getDocumentos();
-		this.enderecos = pessoa.getEnderecos();
-		this.plasticos = pessoa.getPlasticos();
-		this.tipopessoa = pessoa.getTipopessoa();
+		this.tipoPessoa = pessoa.getTipoPessoa();
 	}
 
 	public String toString() {
@@ -355,9 +251,8 @@ public class Pessoa implements Serializable {
 				+ "necessidadesEspeciais = " + this.necessidadesEspeciais + "\n" + "nome = " + this.nome + "\n"
 				+ "nomeMae = " + this.nomeMae + "\n" + "nomePai = " + this.nomePai + "\n" + "numeroCelular = "
 				+ this.numeroCelular + "\n" + "responsavelLegal = " + this.responsavelLegal + "\n" + "sexo = "
-				+ this.sexo + "\n" + "uf = " + this.uf + "\n" + "documentos = " + this.documentos + "\n"
-				+ "enderecos = " + this.enderecos + "\n" + "plasticos = " + this.plasticos + "\n" + "tipopessoa = "
-				+ this.tipopessoa + "\n"
+				+ this.sexo + "\n" + "uf = " + this.uf + "\n" + "tipopessoa = "
+				+ this.tipoPessoa + "\n"
 
 		);
 	}
