@@ -22,7 +22,7 @@ public class CatracaView extends Application{
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/fxml/CatracaView.fxml"));
 			Scene scene = new Scene(root,600,400);
 			primaryStage.setScene(scene);
-			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/fxml/catraca.jpg")));
+			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/catraca.jpg")));
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

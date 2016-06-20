@@ -15,24 +15,18 @@ import org.apache.log4j.Logger;
 public class PessoaDao implements IDao<Pessoa> {
 
 	static Logger logger = Logger.getLogger(PessoaDao.class);
-	private Connection dbConnection; 
-	
+	private Connection dbConnection;
+
 	/**
 	 *
 	 */
 	public PessoaDao() {
-		
-		synchronized (PessoaDao.class) {
-			if (dbConnection == null) {
-				dbConnection = JpaUtil.getDBConnection();
-			}
-		}
 	}
 
 	@Override
 	public void save(Pessoa obj) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -56,6 +50,7 @@ public class PessoaDao implements IDao<Pessoa> {
 	PreparedStatement ps = null;
 	Pessoa pessoa = null;
 	try {
+		dbConnection = JpaUtil.getDBConnection();
 		ps = dbConnection.prepareStatement(selectSQL);
 		ps.setLong(1, (Long) id);
 		ResultSet rs = ps.executeQuery();
@@ -78,7 +73,7 @@ public class PessoaDao implements IDao<Pessoa> {
 			pessoa.setNacionalidade(rs.getString("nacionalidade"));
 			pessoa.setEstadoCivil(rs.getString("estadocivil"));
 			pessoa.setTipoPessoa(rs.getString("tipopessoa"));
-			
+
 		}
 	} catch (SQLException e) {
 		logger.error("Erro ao buscar evento:\n", e);
@@ -96,6 +91,6 @@ public class PessoaDao implements IDao<Pessoa> {
 	@Override
 	public void update(Pessoa obj) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

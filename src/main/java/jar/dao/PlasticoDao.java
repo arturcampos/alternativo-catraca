@@ -14,18 +14,13 @@ import org.apache.log4j.Logger;
 
 public class PlasticoDao implements IDao<Plastico> {
 
-	static Logger logger = Logger.getLogger(EventoDao.class);
+	static Logger logger = Logger.getLogger(PlasticoDao.class);
 	private Connection dbConnection;
 
 	/**
 	 *
 	 */
 	public PlasticoDao() {
-		synchronized (PlasticoDao.class) {
-			if (dbConnection == null) {
-				dbConnection = JpaUtil.getDBConnection();
-			}
-		}
 	}
 
 	public Plastico findByDigitableLine(String digitableLine) throws SQLException {
@@ -34,6 +29,7 @@ public class PlasticoDao implements IDao<Plastico> {
 		PreparedStatement ps = null;
 		Plastico plastico = null;
 		try {
+			dbConnection = JpaUtil.getDBConnection();
 			ps = dbConnection.prepareStatement(selectSQL);
 			ps.setString(1, digitableLine);
 			ResultSet rs = ps.executeQuery();

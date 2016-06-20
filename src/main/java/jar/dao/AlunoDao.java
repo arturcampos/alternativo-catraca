@@ -17,23 +17,17 @@ import org.apache.log4j.Logger;
 public class AlunoDao implements IDao<Aluno> {
 
 	static Logger logger = Logger.getLogger(AlunoDao.class);
-	private Connection dbConnection; 
-	
+	private Connection dbConnection;
+
 	/**
 	 *
 	 */
 	public AlunoDao() {
-		
-		synchronized (AlunoDao.class) {
-			if (dbConnection == null) {
-				dbConnection = JpaUtil.getDBConnection();
-			}
-		}
 	}
 
 
 	public List<Aluno> findByPersonId(Long id) throws SQLException{
-		
+
 		String selectSQL = "SELECT a.id, a.matricula, a.tipocotaingresso,"
 						+ " a.dataingresso, a.dataegresso,"
 						+ " a.Turma_id, a.status, a.pessoa_Id"
@@ -41,10 +35,11 @@ public class AlunoDao implements IDao<Aluno> {
 		PreparedStatement ps = null;
 		List<Aluno> alunos = new  ArrayList<Aluno>();
 		try {
+			dbConnection = JpaUtil.getDBConnection();
 			ps = dbConnection.prepareStatement(selectSQL);
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				Aluno aluno = new Aluno();
 				aluno.setId(rs.getLong("id"));
@@ -54,6 +49,7 @@ public class AlunoDao implements IDao<Aluno> {
 				aluno.setPessoaId(rs.getLong("Pessoa_id"));
 				aluno.setTurmaId(rs.getLong("Turma_id"));
 				aluno.setStatus(rs.getString("status"));
+				alunos.add(aluno);
 			}
 		} catch (SQLException e) {
 			logger.error("ERROR: " +e.getMessage());
@@ -73,7 +69,7 @@ public class AlunoDao implements IDao<Aluno> {
 	@Override
 	public void save(Aluno obj) throws SQLException{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -101,6 +97,6 @@ public class AlunoDao implements IDao<Aluno> {
 	@Override
 	public void update(Aluno obj) throws SQLException{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

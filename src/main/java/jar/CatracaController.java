@@ -35,9 +35,10 @@ public class CatracaController {
 	private PessoaDao pessoaDao;
 	private AlunoDao alunoDao;
 	private EventoDao eventoDao;
-	static Logger logger = Logger.getLogger(CatracaController.class);
+	static Logger logger;
 
 	static {
+		logger = Logger.getLogger(CatracaController.class);
 		logger.info("Iniciando bloco estático...");
 		Properties prop = AbstractPropertyReader.propertyReader();
 		horaEntrada = prop.getProperty("hora.entrada");
@@ -51,6 +52,7 @@ public class CatracaController {
 	}
 
 	public CatracaController() {
+
 		logger.info("Inicializando classes de DAO ...");
 		synchronized (CatracaController.class) {
 			if (plasticoDao == null) {
@@ -69,6 +71,7 @@ public class CatracaController {
 	}
 
 	public HashMap<String, Object> novoEvento(String linhaDigitavel) {
+
 		logger.info("*****Criando novo evento ...******");
 		HashMap<String, Object> retorno = new HashMap<String, Object>();
 
@@ -92,7 +95,7 @@ public class CatracaController {
 					if ((pessoa != null) && (pessoa.getTipoPessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
 						logger.info("Pessoa Existe e é um aluno ativo \n\nBuscando Eventos ...");
 						List<Evento> eventos = consultarEventosEntrada(pessoa.getId());
-						if (eventos.isEmpty() || eventos == null) {
+						if (eventos == null || eventos.isEmpty()) {
 							logger.info("Não há eventos para o dia. Registrando nova entrada...");
 							Date now = new Date();
 
@@ -235,15 +238,17 @@ public class CatracaController {
 			if (now.getMinutes() <= entrada.getMinutes()) {
 				status = "OK";
 				logger.info("Entrada OK");
-			} else
+			} else{
 				status = "NOK";
 			logger.info("Entrada no segundo horário...");
+			}
 		} else if (now.getHours() < entrada.getHours()) {
 			status = "OK";
 			logger.info("Entrada OK");
-		} else
+		} else{
 			status = "NOK";
-		logger.info("Entrada no segundo horário...");
+			logger.info("Entrada no segundo horário...");
+		}
 
 		return status;
 

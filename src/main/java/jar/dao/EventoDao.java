@@ -24,34 +24,31 @@ public class EventoDao implements IDao<Evento> {
 	 *
 	 */
 	public EventoDao() {
-		synchronized (PlasticoDao.class) {
-			if (dbConnection == null) {
-				dbConnection = JpaUtil.getDBConnection();
-			}
-		}
 	}
 /**
- * 
+ *
  * @param id
  * @param date
  * @return
  * @throws SQLException
  */
 	public List<Evento> findEventByPersonAndDate(Long id, Date date) throws SQLException {
-		String selectSQL = "SELECT e FROM Evento e "
-						+ "WHERE e.pessoa.id = ? AND "
-						+ "date_format(datahoraentrada, 'dd/MM/yyyy') = date_format(?, 'dd/MM/yyyy')"
-						+ " and datahorasaida IS NULL";
-		
+		String selectSQL = "SELECT e.id, e.datahoraentrada, e.datahorasaida, e.Pessoa_id, e.status FROM Evento e "
+						+ "WHERE e.Pessoa_id = ? AND "
+						+ "date_format(e.datahoraentrada, 'dd/MM/yyyy') = date_format(?, 'dd/MM/yyyy')"
+						+ " and e.datahorasaida IS NULL";
+
 		PreparedStatement ps = null;
 		List<Evento> eventos = new ArrayList<Evento>();
-		
+
 		try {
+			dbConnection = JpaUtil.getDBConnection();
 			ps = dbConnection.prepareStatement(selectSQL);
 			ps.setLong(1, (Long) id);
+			ps.setDate(2, new java.sql.Date(date.getTime()));
 			ResultSet rs = ps.executeQuery();
 			Evento evento = null;
-			
+
 			while (rs.next()) {
 				evento = new Evento();
 				evento.setId(rs.getLong("id"));
@@ -59,7 +56,7 @@ public class EventoDao implements IDao<Evento> {
 				evento.setDataHoraSaida(rs.getTimestamp("datahorasaida"));
 				evento.setPessoaId(rs.getLong("Pessoa_id"));
 				evento.setStatus(rs.getString("status"));
-				
+
 				eventos.add(evento);
 			}
 		} catch (SQLException e) {
@@ -72,7 +69,7 @@ public class EventoDao implements IDao<Evento> {
 				dbConnection.close();
 			}
 		}
-		return null;
+		return eventos;
 	}
 
 	@Override
@@ -82,9 +79,20 @@ public class EventoDao implements IDao<Evento> {
 		PreparedStatement ps = null;
 
 		try {
+			dbConnection = JpaUtil.getDBConnection();
 			ps = dbConnection.prepareStatement(insertSQL);
-			ps.setTimestamp(1, (Timestamp) evn.getDataHoraEntrada());
-			ps.setTimestamp(2, (Timestamp) evn.getDataHoraSaida());
+			if(evn.getDataHoraEntrada() != null){
+				ps.setTimestamp(1, new Timestamp(evn.getDataHoraEntrada().getTime()));
+			}
+			else{
+				ps.setNull(1,java.sql.Types.TIMESTAMP);
+			}
+			if(evn.getDataHoraSaida() != null){
+				ps.setTimestamp(2, new Timestamp(evn.getDataHoraSaida().getTime()));
+			}
+			else{
+				ps.setNull(2,java.sql.Types.TIMESTAMP);
+			}
 			ps.setLong(3, evn.getPessoaId());
 			ps.setString(4, evn.getStatus());
 
@@ -121,6 +129,7 @@ public class EventoDao implements IDao<Evento> {
 		PreparedStatement ps = null;
 		Evento evento = null;
 		try {
+			dbConnection = JpaUtil.getDBConnection();
 			ps = dbConnection.prepareStatement(selectSQL);
 			ps.setLong(1, (Long) id);
 			ResultSet rs = ps.executeQuery();
@@ -148,13 +157,14 @@ public class EventoDao implements IDao<Evento> {
 
 	@Override
 	public void update(Evento evn) throws SQLException {
-		String updateSQL = "UPDATE Evento e" + "SET e.datahorasaida = ?, e.status = ?" 
+		String updateSQL = "UPDATE Evento e SET e.datahorasaida = ?, e.status = ? "
 							+ "WHERE e.id = ?";
 		PreparedStatement ps = null;
 
 		try {
+			dbConnection = JpaUtil.getDBConnection();
 			ps = dbConnection.prepareStatement(updateSQL);
-			ps.setTimestamp(1, (Timestamp) evn.getDataHoraSaida());
+			ps.setTimestamp(1, new Timestamp(evn.getDataHoraSaida().getTime()));
 			ps.setString(2, evn.getStatus());
 			ps.setLong(3, evn.getId());
 
