@@ -33,7 +33,7 @@ public class EventoDao implements IDao<Evento> {
  * @throws SQLException
  */
 	public List<Evento> findEventByPersonAndDate(Long id, Date date) throws SQLException {
-		String selectSQL = "SELECT e.id, e.datahoraentrada, e.datahorasaida, e.Pessoa_id, e.status FROM Evento e "
+		String selectSQL = "SELECT e.id, e.datahoraentrada, e.datahorasaida, e.Pessoa_id, e.status FROM evento e "
 						+ "WHERE e.Pessoa_id = ? AND "
 						+ "date_format(e.datahoraentrada, 'dd/MM/yyyy') = date_format(?, 'dd/MM/yyyy')"
 						+ " and e.datahorasaida IS NULL";
@@ -74,7 +74,7 @@ public class EventoDao implements IDao<Evento> {
 
 	@Override
 	public void save(Evento evn) throws SQLException {
-		String insertSQL = "INSERT INTO Evento(datahoraentrada, datahorasaida, Pessoa_id, status) "
+		String insertSQL = "INSERT INTO evento(datahoraentrada, datahorasaida, Pessoa_id, status) "
 						+ "VALUES(?,?,?,?)";
 		PreparedStatement ps = null;
 
@@ -125,7 +125,7 @@ public class EventoDao implements IDao<Evento> {
 	@Override
 	public Evento findById(Serializable id) throws SQLException {
 		String selectSQL = "SELECT e.id, e.datahoraentrada, e.datahorasaida, e.Pessoa_id, e.status"
-							+ " FROM Evento e WHERE e.id = ?";
+							+ " FROM evento e WHERE e.id = ?";
 		PreparedStatement ps = null;
 		Evento evento = null;
 		try {
@@ -157,7 +157,7 @@ public class EventoDao implements IDao<Evento> {
 
 	@Override
 	public void update(Evento evn) throws SQLException {
-		String updateSQL = "UPDATE Evento e SET e.datahorasaida = ?, e.status = ? "
+		String updateSQL = "UPDATE evento e SET e.datahorasaida = ?, e.status = ? "
 							+ "WHERE e.id = ?";
 		PreparedStatement ps = null;
 

@@ -31,7 +31,7 @@ public class AlunoDao implements IDao<Aluno> {
 		String selectSQL = "SELECT a.id, a.matricula, a.tipocotaingresso,"
 						+ " a.dataingresso, a.dataegresso,"
 						+ " a.Turma_id, a.status, a.pessoa_Id"
-						+ " FROM Aluno a WHERE a.Pessoa_id = ?";
+						+ " FROM aluno a WHERE a.Pessoa_id = ?";
 		PreparedStatement ps = null;
 		List<Aluno> alunos = new  ArrayList<Aluno>();
 		try {

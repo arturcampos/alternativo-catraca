@@ -27,29 +27,17 @@ import org.apache.log4j.Logger;
 
 public class CatracaController {
 
-	private static final String ATIVO;
-	private static final String ALUNO;
-	private static final String horaEntrada;
-	private static final String horaSaida;
+	private static final String ATIVO = Status.ATIVO.toString();
+	private static final String ALUNO = TipoPessoa.ALUNO.toString();
+	private String horaEntrada;
+	private String horaSaida;
 	private PlasticoDao plasticoDao;
 	private PessoaDao pessoaDao;
 	private AlunoDao alunoDao;
 	private EventoDao eventoDao;
-	static Logger logger;
+	static Logger logger = Logger.getLogger(CatracaController.class);
+	private Properties prop = null;
 
-	static {
-		logger = Logger.getLogger(CatracaController.class);
-		logger.info("Iniciando bloco estático...");
-		Properties prop = AbstractPropertyReader.propertyReader();
-		horaEntrada = prop.getProperty("hora.entrada");
-		horaSaida = prop.getProperty("hora.saida");
-
-		logger.info("Hora Entrada cadastrada: " + horaEntrada);
-		logger.info("Hora Saída cadastrada: " + horaSaida);
-
-		ATIVO = Status.ATIVO.toString();
-		ALUNO = TipoPessoa.ALUNO.toString();
-	}
 
 	public CatracaController() {
 
@@ -68,11 +56,23 @@ public class CatracaController {
 				eventoDao = new EventoDao();
 			}
 		}
+
+		if(prop == null){
+			prop = AbstractPropertyReader.propertyReader();
+		}
+		horaEntrada = prop.getProperty("hora.entrada");
+		horaSaida = prop.getProperty("hora.saida");
+
+		logger.info("Hora Entrada cadastrada: " + horaEntrada);
+		logger.info("Hora Saída cadastrada: " + horaSaida);
+
+
+
 	}
 
 	public HashMap<String, Object> novoEvento(String linhaDigitavel) {
 
-		logger.info("*****Criando novo evento ...******");
+		logger.info("***** Criando novo evento ******");
 		HashMap<String, Object> retorno = new HashMap<String, Object>();
 
 		// Caso a linha digitável esteja vazia, ERRO
@@ -81,19 +81,21 @@ public class CatracaController {
 						"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 			logger.error(retorno.get("mensagem"));
 		} else {
+
 			try {
 				// Busca plástico através da linha digitïável
-				logger.info("Buscando Cartão...");
+				logger.info("Buscando Cartão: " + linhaDigitavel);
 				Plastico plastico = consultarPlastico(linhaDigitavel);
 
 				// Se o plástico existe e está ativo
 				if ((plastico != null) && (plastico.getStatus().equals(ATIVO))) {
-					logger.info("Cartão encontrado!");
+					logger.debug("Cartão " + plastico.getLinhaDigitavel() + " encontrado e Ativo.");
 
 					// Se a pessoa existe E ela é aluno E ela está ativa
 					Pessoa pessoa = pessoaDao.findById(plastico.getPessoaId());
 					if ((pessoa != null) && (pessoa.getTipoPessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
-						logger.info("Pessoa Existe e é um aluno ativo \n\nBuscando Eventos ...");
+						logger.info("Pessoa existe e é um aluno ativo!");
+						logger.info("Buscando eventos cadastrados para a pessoa");
 						List<Evento> eventos = consultarEventosEntrada(pessoa.getId());
 						if (eventos == null || eventos.isEmpty()) {
 							logger.info("Não há eventos para o dia. Registrando nova entrada...");
@@ -141,7 +143,7 @@ public class CatracaController {
 				e.printStackTrace();
 				retorno.put("mensagem", "Houve um erro ao registradar as informações"
 										+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
-				System.err.println(retorno.get("mensagem"));
+				logger.error(retorno.get("mensagem"), e);
 			}
 		}
 		return retorno;

@@ -46,7 +46,7 @@ public class PessoaDao implements IDao<Pessoa> {
 		String selectSQL = "SELECT p.id, p.nome, p.datanasc, p.sexo, p.naturalidade, p.uf, p.nomepai, "
 						+ "p.nomemae, p.responsavellegal, p.email, p.numerocelular, p.necessidadesespeciais, "
 						+ "p.etnia, p.nacionalidade, p.estadocivil, p.tipopessoa"
-						+ " FROM Pessoa p WHERE p.id = ?";
+						+ " FROM pessoa p WHERE p.id = ?";
 	PreparedStatement ps = null;
 	Pessoa pessoa = null;
 	try {

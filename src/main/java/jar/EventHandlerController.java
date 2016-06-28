@@ -23,7 +23,9 @@ public class EventHandlerController {
 	private String mensagem = "";
 
 	public EventHandlerController() {
-		catraca = new CatracaController();
+		if(catraca == null){
+			catraca = new CatracaController();
+		}
 	}
 
 	@FXML
