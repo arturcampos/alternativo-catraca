@@ -38,7 +38,6 @@ public class CatracaController {
 	static Logger logger = Logger.getLogger(CatracaController.class);
 	private Properties prop = null;
 
-
 	public CatracaController() {
 
 		logger.info("Inicializando classes de DAO ...");
@@ -57,7 +56,7 @@ public class CatracaController {
 			}
 		}
 
-		if(prop == null){
+		if (prop == null) {
 			prop = AbstractPropertyReader.propertyReader();
 		}
 		horaEntrada = prop.getProperty("hora.entrada");
@@ -65,8 +64,6 @@ public class CatracaController {
 
 		logger.info("Hora Entrada cadastrada: " + horaEntrada);
 		logger.info("Hora Saída cadastrada: " + horaSaida);
-
-
 
 	}
 
@@ -78,7 +75,7 @@ public class CatracaController {
 		// Caso a linha digitável esteja vazia, ERRO
 		if ((linhaDigitavel.equals("")) || (linhaDigitavel == null)) {
 			retorno.put("mensagem",
-						"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					"Leitura falhou, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 			logger.error(retorno.get("mensagem"));
 		} else {
 
@@ -95,6 +92,7 @@ public class CatracaController {
 					Pessoa pessoa = pessoaDao.findById(plastico.getPessoaId());
 					if ((pessoa != null) && (pessoa.getTipoPessoa().equals(ALUNO)) && alunoAtivo(pessoa.getId())) {
 						logger.info("Pessoa existe e é um aluno ativo!");
+
 						logger.info("Buscando eventos cadastrados para a pessoa");
 						List<Evento> eventos = consultarEventosEntrada(pessoa.getId());
 						if (eventos == null || eventos.isEmpty()) {
@@ -114,7 +112,8 @@ public class CatracaController {
 
 							if (eventos.size() > 1) {
 								evento = eventos.get(eventos.size() - 1);
-								logger.info("Existe mais de 1 evento para este cartão no dia de hoje, apenas o evento mais recente será atualizado");
+								logger.info(
+										"Existe mais de 1 evento para este cartão no dia de hoje, apenas o evento mais recente será atualizado");
 							} else {
 								evento = eventos.get(0);
 							}
@@ -132,17 +131,21 @@ public class CatracaController {
 							retorno.put("mensagem", mensagem);
 							logger.info(mensagem);
 						}
+					} else{
+						retorno.put("mensagem", (Object) "Aluno não encontrado ou INATIVO na base de dados"
+								+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						logger.warn(retorno.get("mensagem"));
 					}
 				} else {
-					retorno.put("mensagem",
-								(Object) "Número de cartão não encontrado na base de dados,"
-												+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					retorno.put("mensagem", (Object) "Número de cartão INATIVO ou não encontrado na base de dados,"
+							+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					logger.warn(retorno.get("mensagem"));
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				retorno.put("mensagem", "Houve um erro ao registradar as informações"
-										+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 				logger.error(retorno.get("mensagem"), e);
 			}
 		}
@@ -159,14 +162,18 @@ public class CatracaController {
 			String dataFormatada = df.format(evento.getDataHoraEntrada());
 
 			mensagem = "Bem vindo " + pessoa.getNome() + "\nEntrada registrada: " + dataFormatada;
+			logger.info(mensagem);
 		} else if (tipoMsg.equals("SAIDA")) {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraSaida());
 
 			mensagem = pessoa.getNome() + " você está saindo antes do fim das Aulas de hoje \nSaida registrada: "
-						+ dataFormatada;
-		} else
+					+ dataFormatada;
+			logger.info(mensagem);
+		} else{
 			mensagem = "Não foi especificado tipo de mensagem";
+			logger.warn(mensagem);
+		}
 		return mensagem;
 	}
 
@@ -196,11 +203,16 @@ public class CatracaController {
 				aluno = alunos.get(0);
 				if (aluno.getStatus().equals(ATIVO)) {
 					estaAtivo = true;
+				} else {
+					estaAtivo = false;
 				}
+			} else {
+				estaAtivo = false;
 			}
+
 			return estaAtivo;
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			logger.error("Erro!!", e);
 			return false;
 		}
 	}
@@ -211,13 +223,13 @@ public class CatracaController {
 			eventos = eventoDao.findEventByPersonAndDate(pessoaId, Calendar.getInstance().getTime());
 			return eventos;
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			logger.error("Erro!!", e);
 			return eventos;
 		}
 	}
 
 	private void update(Evento novoEvento) {
-		try{
+		try {
 			Evento eventoSalvo = eventoDao.findById(novoEvento.getId());
 			if (novoEvento.equals(eventoSalvo)) {
 				logger.info("Atualizando evento com data final e status ...");
@@ -225,7 +237,7 @@ public class CatracaController {
 			} else {
 				logger.info("Evento Não encontrado para atualização ..");
 			}
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			logger.error("Erro ao atualizar evento ", e);
 		}
 	}
@@ -240,14 +252,14 @@ public class CatracaController {
 			if (now.getMinutes() <= entrada.getMinutes()) {
 				status = "OK";
 				logger.info("Entrada OK");
-			} else{
+			} else {
 				status = "NOK";
-			logger.info("Entrada no segundo horário...");
+				logger.info("Entrada no segundo horário...");
 			}
 		} else if (now.getHours() < entrada.getHours()) {
 			status = "OK";
 			logger.info("Entrada OK");
-		} else{
+		} else {
 			status = "NOK";
 			logger.info("Entrada no segundo horário...");
 		}

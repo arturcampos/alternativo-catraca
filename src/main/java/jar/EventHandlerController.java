@@ -41,7 +41,7 @@ public class EventHandlerController {
 					mensagem = (String) retorno.get("mensagem");
 					labelSetText(mensagem);
 				} else {
-					mensagem = "Erro ao reproduzir mensagem";
+					mensagem = "Erro ao reproduzir mensagem, verifique o log da aplicação para mais informações";
 				}
 			} catch (Exception e) {
 				mensagem = "Houve um erro no processamento, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo";
