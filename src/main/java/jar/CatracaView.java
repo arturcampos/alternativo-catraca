@@ -18,7 +18,7 @@ public class CatracaView extends Application{
 	public void start(Stage primaryStage) {
 		try {
 
-			setUserAgentStylesheet(STYLESHEET_CASPIAN);
+			//setUserAgentStylesheet(STYLESHEET_CASPIAN);
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/fxml/CatracaView.fxml"));
 			Scene scene = new Scene(root,600,400);
 			primaryStage.setScene(scene);
