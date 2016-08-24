@@ -1,5 +1,6 @@
 package jar;
 
+import javafx.scene.paint.Paint;
 import java.util.HashMap;
 
 import javafx.application.Platform;
@@ -21,9 +22,12 @@ public class EventHandlerController {
 	private CatracaController catraca;
 
 	private String mensagem = "";
+	private String color = "";
 
 	public EventHandlerController() {
-		catraca = new CatracaController();
+		if(catraca == null){
+			catraca = new CatracaController();
+		}
 	}
 
 	@FXML
@@ -37,9 +41,16 @@ public class EventHandlerController {
 
 				if (!retorno.isEmpty()) {
 					mensagem = (String) retorno.get("mensagem");
+					String status = (String) retorno.get("status");
+					if((status == null) || !status.equals("OK")){
+						color = "#FF0000";	
+					}else{
+						color = "#048f59";
+					}
+					
 					labelSetText(mensagem);
 				} else {
-					mensagem = "Erro ao reproduzir mensagem";
+					mensagem = "Erro ao reproduzir mensagem, verifique o log da aplicação para mais informações";
 				}
 			} catch (Exception e) {
 				mensagem = "Houve um erro no processamento, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo";
@@ -78,6 +89,26 @@ public class EventHandlerController {
 				Thread labelThread = new Thread(labelSetTextTask);
 				labelThread.setDaemon(true);
 				labelThread.start();
+				
+				Task<Void> labelSetTextFillTask = new Task<Void>() {
+					@Override
+					protected Void call() throws Exception {
+						Thread.sleep(10);
+						Platform.runLater(new Runnable() {
+							public void run() {
+								retornoLabel.setTextFill(Paint.valueOf(color));	
+								
+							}
+
+						});
+
+						return null;
+					}
+				};
+				Thread textFillThread = new Thread(labelSetTextFillTask);
+				textFillThread.setDaemon(true);
+				textFillThread.start();
+				
 			}
 		}
 	}

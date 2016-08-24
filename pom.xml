@@ -32,7 +32,7 @@
 
 					<mainClass>jar.CatracaView</mainClass>
 					<encoding>Cp1252</encoding>
-					<!-- only required if signing the jar file <keyStoreAlias>example-user</keyStoreAlias> 
+					<!-- only required if signing the jar file <keyStoreAlias>example-user</keyStoreAlias>
 						<keyStorePassword>example-password</keyStorePassword> <allPermissions>true</allPermissions> -->
 				</configuration>
 			</plugin>
@@ -50,48 +50,6 @@
 
 
 	<dependencies>
-		<!-- http://mvnrepository.com/artifact/javax.persistence/persistence-api -->
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-
-		<!-- for JPA, use hibernate-entitymanager instead of hibernate-core -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- optional -->
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-osgi</artifactId>
-			<version>5.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-envers</artifactId>
-			<version>5.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-c3p0</artifactId>
-			<version>5.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-proxool</artifactId>
-			<version>5.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
@@ -137,21 +95,10 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.37</version>
 		</dependency>
-
-		<!-- http://mvnrepository.com/artifact/org.jboss.weld/weld-core -->
-		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-core</artifactId>
-			<version>2.3.4.Final</version>
-		</dependency>
-
-
 	</dependencies>
-
 </project>
