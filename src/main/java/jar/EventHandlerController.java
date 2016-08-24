@@ -25,8 +25,8 @@ public class EventHandlerController {
 	private String color = "";
 
 	@FXML
-	private void handleKeyPressed(KeyEvent event) throws InterruptedException {
-		if (event.getCode() == KeyCode.ENTER) {
+	private void handleKeyPressed(KeyEvent event) {
+		if (event.getCode().equals(KeyCode.ENTER)) {
 			try {
 
 				String linhaDigitavel = matriculaTextField.getText();

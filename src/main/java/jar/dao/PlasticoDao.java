@@ -25,7 +25,7 @@ public class PlasticoDao implements IDao<Plastico> {
 
 	public Plastico findByDigitableLine(String digitableLine) throws SQLException {
 		String selectSQL = "SELECT p.id, p.linhadigitavel, p.datacadastro, p.status, p.Pessoa_id"
-						+ " FROM plastico p WHERE p.linhadigitavel = ?";
+						+ " FROM plastico p WHERE p.linhadigitavel LIKE ?";
 		logger.debug(selectSQL);
 		PreparedStatement ps = null;
 		Plastico plastico = null;

@@ -22,13 +22,14 @@ public class CatracaView extends Application{
 			LOGGER.info("=== Inicializando aplicacao... ===");
 			//setUserAgentStylesheet(STYLESHEET_CASPIAN);
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/fxml/CatracaView.fxml"));
-			Scene scene = new Scene(root,600,400);
+			Scene scene = new Scene(root,800,600);
 			primaryStage.setScene(scene);
 			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/catraca.jpg")));
 			primaryStage.show();
 			LOGGER.info("=== Aplicacao pronta... ===");
 		} catch(Exception e) {
 			LOGGER.error("Erro ao inicializar", e);
+			System.exit(1);
 		}
 	}
 }

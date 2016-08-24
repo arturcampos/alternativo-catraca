@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -130,20 +129,20 @@ public class CatracaController {
 							LOGGER.info(mensagem);
 						}
 					} else{
-						retorno.put("mensagem", (Object) "Aluno não encontrado ou INATIVO na base de dados"
-								+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						retorno.put("mensagem", (Object) "Aluno não encontrado ou INATIVO na base de dados. \n"
+								+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 						LOGGER.warn(retorno.get("mensagem"));
 					}
 				} else {
-					retorno.put("mensagem", (Object) "Número de cartão INATIVO ou não encontrado na base de dados,"
-							+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					retorno.put("mensagem", (Object) "O numero da carteirinha ["+ linhaDigitavel +"] não foi encontrado na base de dados. \n"
+							+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 					LOGGER.warn(retorno.get("mensagem"));
+					
 
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				retorno.put("mensagem", "Houve um erro ao registradar as informações"
-						+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+				retorno.put("mensagem", "Houve um erro ao registradar as informações. \n"
+						+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 				LOGGER.error(retorno.get("mensagem"), e);
 			}
 		}

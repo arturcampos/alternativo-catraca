@@ -36,7 +36,7 @@ public class EventoDao implements IDao<Evento> {
 		String selectSQL = "SELECT e.id, e.datahoraentrada, e.datahorasaida, e.Pessoa_id, e.status FROM evento e "
 						+ "WHERE e.Pessoa_id = ? AND "
 						+ "date_format(e.datahoraentrada, 'dd/MM/yyyy') = date_format(?, 'dd/MM/yyyy')"
-						+ " and e.datahorasaida IS NULL";
+						+ " AND (e.datahorasaida IS NULL OR e.datahorasaida LIKE '')";
 
 		PreparedStatement ps = null;
 		List<Evento> eventos = new ArrayList<Evento>();

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jar.EventHandlerController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jar.EventHandlerController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="42.0" layoutY="14.0" prefHeight="79.0" prefWidth="497.0" text="Futuro Pré-Vestibular Alternativo">
          <font>
