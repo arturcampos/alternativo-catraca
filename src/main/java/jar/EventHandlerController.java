@@ -1,5 +1,6 @@
 package jar;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import javafx.application.Platform;
@@ -37,19 +38,21 @@ public class EventHandlerController {
 					mensagem = (String) retorno.get("mensagem");
 					String status = (String) retorno.get("status");
 					if (status == null) {
-						color = "#FF0000";
+						color = "#FF0000"; // vermelho
 					} else if (status.equals("NOK")) {
-						color = "#048f59";
+						color = "#FF8000"; // laranja
 					} else {
-						color = "#FFD700";
+						color = "#00B300"; //verde
 					}
 
 					// labelSetText(mensagem);
 				} else {
 					mensagem = "Erro ao reproduzir mensagem, verifique o log da aplicação para mais informações";
+					color = "#FF0000"; // vermelho
 				}
 			} catch (Exception e) {
 				mensagem = "Houve um erro no processamento, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo";
+				color = "#FF0000"; // vermelho
 			} finally {
 				Task<Void> clearTextFieldTask = new Task<Void>() {
 					@Override
@@ -93,6 +96,7 @@ public class EventHandlerController {
 						Platform.runLater(new Runnable() {
 							public void run() {
 								retornoLabel.setTextFill(Paint.valueOf(color));
+								java.awt.Toolkit.getDefaultToolkit().beep();
 							}
 						});
 						return null;

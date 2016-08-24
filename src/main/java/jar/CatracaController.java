@@ -137,7 +137,7 @@ public class CatracaController {
 					retorno.put("mensagem", (Object) "O numero da carteirinha ["+ linhaDigitavel +"] não foi encontrado na base de dados. \n"
 							+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 					LOGGER.warn(retorno.get("mensagem"));
-					
+
 
 				}
 			} catch (Exception e) {
@@ -165,7 +165,7 @@ public class CatracaController {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraEntrada());
 
-			mensagem = pessoa.getNome() + " Você está entrando no SEGUNDO HORÁRIO \nEntrada registrada: " + dataFormatada;
+			mensagem = pessoa.getNome() + "\n Você está entrando no SEGUNDO HORÁRIO \nEntrada registrada: " + dataFormatada;
 			LOGGER.info(mensagem);
 
 
@@ -173,14 +173,14 @@ public class CatracaController {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraSaida());
 
-			mensagem = pessoa.getNome() + " você está saindo antes do fim das Aulas de hoje \nSaida registrada: "
+			mensagem = pessoa.getNome() + "\nVocê está saindo antes do fim das Aulas de hoje \nSaida registrada: "
 					+ dataFormatada;
 			LOGGER.info(mensagem);
 		} else if (tipoMsg.equals("SAIDAOK")) {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraSaida());
 
-			mensagem = pessoa.getNome() + " Até a próxima aula \nSaida registrada: "
+			mensagem = "\t" + pessoa.getNome() + "\nAté a próxima aula! \nSaida registrada: "
 					+ dataFormatada;
 			LOGGER.info(mensagem);
 

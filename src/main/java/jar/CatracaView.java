@@ -25,7 +25,7 @@ public class CatracaView extends Application{
 			LOGGER.info("CALENDAR - getTime " + Calendar.getInstance().getTime());
 			//setUserAgentStylesheet(STYLESHEET_CASPIAN);
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/fxml/CatracaView.fxml"));
-			Scene scene = new Scene(root,800,600);
+			Scene scene = new Scene(root,600,400);
 			primaryStage.setScene(scene);
 			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/catraca.jpg")));
 			primaryStage.show();
