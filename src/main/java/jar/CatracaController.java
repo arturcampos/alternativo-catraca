@@ -234,7 +234,7 @@ public class CatracaController {
 	private List<Evento> consultarEventosEntrada(Long pessoaId) {
 		List<Evento> eventos = new ArrayList<Evento>();
 		try {
-			eventos = eventoDao.findEventByPersonAndDate(pessoaId, Calendar.getInstance().getTime());
+			eventos = eventoDao.findEventByPersonAndDate(pessoaId, new Date());
 			return eventos;
 		} catch (Exception e) {
 			LOGGER.error("Erro!!", e);

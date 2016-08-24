@@ -35,8 +35,8 @@ public class EventoDao implements IDao<Evento> {
 	public List<Evento> findEventByPersonAndDate(Long id, Date date) throws SQLException {
 		String selectSQL = "SELECT e.id, e.datahoraentrada, e.datahorasaida, e.Pessoa_id, e.status FROM evento e "
 						+ "WHERE e.Pessoa_id = ? AND "
-						+ "date_format(e.datahoraentrada, 'dd/MM/yyyy') = date_format(?, 'dd/MM/yyyy')"
-						+ " AND (e.datahorasaida IS NULL OR e.datahorasaida LIKE '')";
+						+ "date_format(e.datahoraentrada, '%d/%m/%Y') = date_format(?, '%d/%m/%Y')"
+						+ " AND e.datahorasaida IS NULL";
 
 		PreparedStatement ps = null;
 		List<Evento> eventos = new ArrayList<Evento>();

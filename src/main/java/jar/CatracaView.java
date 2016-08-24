@@ -1,5 +1,7 @@
 package jar;
 
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 
 import javafx.application.Application;
@@ -20,6 +22,7 @@ public class CatracaView extends Application{
 	public void start(Stage primaryStage) {
 		try {
 			LOGGER.info("=== Inicializando aplicacao... ===");
+			LOGGER.info("CALENDAR - getTime " + Calendar.getInstance().getTime());
 			//setUserAgentStylesheet(STYLESHEET_CASPIAN);
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/fxml/CatracaView.fxml"));
 			Scene scene = new Scene(root,800,600);
