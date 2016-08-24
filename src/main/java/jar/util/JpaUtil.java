@@ -9,18 +9,13 @@ import org.apache.log4j.Logger;
 
 public class JpaUtil {
 
-	private static Properties prop;
-	static{
-		prop = AbstractPropertyReader.propertyReader();
-	}
-	
-	private static final String DB_DRIVER = prop.getProperty("db.driver");
-	private static final String DB_CONNECTION =  prop.getProperty("db.connection");
-	private static final String DB_USER = prop.getProperty("db.user");
-	private static final String DB_PASSWORD = prop.getProperty("db.password");
-	
-	static Logger logger = Logger.getLogger(JpaUtil.class);
-	
+	private static final String DB_DRIVER = PropertyHandler.getInstance().getValue("db.driver");
+	private static final String DB_CONNECTION =  PropertyHandler.getInstance().getValue("db.connection");
+	private static final String DB_USER = PropertyHandler.getInstance().getValue("db.user");
+	private static final String DB_PASSWORD = PropertyHandler.getInstance().getValue("db.password");
+
+	static Logger LOGGER = Logger.getLogger(JpaUtil.class);
+
 	public static Connection getDBConnection() {
 
 		Connection dbConnection = null;
@@ -28,14 +23,14 @@ public class JpaUtil {
 		try {
 			Class.forName(DB_DRIVER);
 		} catch (ClassNotFoundException e) {
-			System.out.println(e.getMessage());
+			LOGGER.error("Erro ao instanciar classe", e);
 		}
 		try {
 			dbConnection = DriverManager.getConnection(
                              DB_CONNECTION, DB_USER,DB_PASSWORD);
 			return dbConnection;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.error("Erro de SQL", e);
 		}
 
 		return dbConnection;
