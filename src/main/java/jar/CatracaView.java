@@ -86,6 +86,7 @@ public class CatracaView extends Application {
 			hbBtn.getChildren().add(btn);
 			grid.add(hbBtn, 1, 4);
 
+			btn.defaultButtonProperty().bind(btn.focusedProperty());
 	        btn.setOnAction(new EventHandler<ActionEvent>() {
 
 	    	    @Override
