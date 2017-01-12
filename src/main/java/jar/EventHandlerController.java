@@ -1,6 +1,5 @@
 package jar;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import javafx.application.Platform;
@@ -130,4 +129,5 @@ public class EventHandlerController {
 	public CatracaController getCatraca() {
 		return catraca;
 	}
+
 }

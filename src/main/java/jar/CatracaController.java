@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ import jar.model.Aluno;
 import jar.model.Evento;
 import jar.model.Pessoa;
 import jar.model.Plastico;
-import jar.util.PropertyHandler;
 import jar.util.Status;
 import jar.util.TipoPessoa;
 
@@ -54,8 +52,8 @@ public class CatracaController {
 			}
 		}
 
-		horaEntrada = PropertyHandler.getInstance().getValue("hora.entrada");
-		horaSaida = PropertyHandler.getInstance().getValue("hora.saida");
+		horaEntrada = CatracaView.HORA_ENTRADA;
+		horaSaida = CatracaView.HORA_SAIDA;
 
 		LOGGER.info("Hora Entrada cadastrada: " + horaEntrada);
 		LOGGER.info("Hora Saída cadastrada: " + horaSaida);
