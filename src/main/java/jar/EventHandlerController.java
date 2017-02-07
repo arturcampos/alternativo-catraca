@@ -1,6 +1,5 @@
 package jar;
 
-import javafx.scene.paint.Paint;
 import java.util.HashMap;
 
 import javafx.application.Platform;
@@ -10,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Paint;
 
 public class EventHandlerController {
 
@@ -19,20 +19,14 @@ public class EventHandlerController {
 	@FXML
 	private Label retornoLabel;
 
-	private CatracaController catraca;
+	private CatracaController catraca = new CatracaController();
 
 	private String mensagem = "";
 	private String color = "";
 
-	public EventHandlerController() {
-		if(catraca == null){
-			catraca = new CatracaController();
-		}
-	}
-
 	@FXML
 	private void handleKeyPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.ENTER) {
+		if (event.getCode().equals(KeyCode.ENTER)) {
 			try {
 
 				String linhaDigitavel = matriculaTextField.getText();
@@ -42,18 +36,22 @@ public class EventHandlerController {
 				if (!retorno.isEmpty()) {
 					mensagem = (String) retorno.get("mensagem");
 					String status = (String) retorno.get("status");
-					if((status == null) || !status.equals("OK")){
-						color = "#FF0000";	
-					}else{
-						color = "#048f59";
+					if (status == null) {
+						color = "#FF0000"; // vermelho
+					} else if (status.equals("NOK")) {
+						color = "#FF8000"; // laranja
+					} else {
+						color = "#00B300"; //verde
 					}
-					
-					labelSetText(mensagem);
+
+					// labelSetText(mensagem);
 				} else {
 					mensagem = "Erro ao reproduzir mensagem, verifique o log da aplicação para mais informações";
+					color = "#FF0000"; // vermelho
 				}
 			} catch (Exception e) {
 				mensagem = "Houve um erro no processamento, tente novamente ou entre em contato com a Equipe do Futuro-Alternativo";
+				color = "#FF0000"; // vermelho
 			} finally {
 				Task<Void> clearTextFieldTask = new Task<Void>() {
 					@Override
@@ -89,26 +87,23 @@ public class EventHandlerController {
 				Thread labelThread = new Thread(labelSetTextTask);
 				labelThread.setDaemon(true);
 				labelThread.start();
-				
+
 				Task<Void> labelSetTextFillTask = new Task<Void>() {
 					@Override
 					protected Void call() throws Exception {
 						Thread.sleep(10);
 						Platform.runLater(new Runnable() {
 							public void run() {
-								retornoLabel.setTextFill(Paint.valueOf(color));	
-								
+								retornoLabel.setTextFill(Paint.valueOf(color));
+								java.awt.Toolkit.getDefaultToolkit().beep();
 							}
-
 						});
-
 						return null;
 					}
 				};
 				Thread textFillThread = new Thread(labelSetTextFillTask);
 				textFillThread.setDaemon(true);
 				textFillThread.start();
-				
 			}
 		}
 	}
@@ -133,18 +128,6 @@ public class EventHandlerController {
 	 */
 	public CatracaController getCatraca() {
 		return catraca;
-	}
-
-	/**
-	 * @param catraca
-	 *            the catraca to set
-	 */
-	public void setCatraca(CatracaController catraca) {
-		this.catraca = catraca;
-	}
-
-	private void labelSetText(String text) {
-
 	}
 
 }

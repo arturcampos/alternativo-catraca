@@ -1,5 +1,16 @@
 package jar;
 
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import jar.dao.AlunoDao;
 import jar.dao.EventoDao;
 import jar.dao.PessoaDao;
@@ -8,22 +19,8 @@ import jar.model.Aluno;
 import jar.model.Evento;
 import jar.model.Pessoa;
 import jar.model.Plastico;
-import jar.util.AbstractPropertyReader;
 import jar.util.Status;
 import jar.util.TipoPessoa;
-
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 public class CatracaController {
 
@@ -36,7 +33,6 @@ public class CatracaController {
 	private AlunoDao alunoDao;
 	private EventoDao eventoDao;
 	static Logger LOGGER = Logger.getLogger(CatracaController.class);
-	private Properties prop = null;
 
 	public CatracaController() {
 
@@ -56,11 +52,8 @@ public class CatracaController {
 			}
 		}
 
-		if (prop == null) {
-			prop = AbstractPropertyReader.propertyReader();
-		}
-		horaEntrada = prop.getProperty("hora.entrada");
-		horaSaida = prop.getProperty("hora.saida");
+		horaEntrada = CatracaView.HORA_ENTRADA;
+		horaSaida = CatracaView.HORA_SAIDA;
 
 		LOGGER.info("Hora Entrada cadastrada: " + horaEntrada);
 		LOGGER.info("Hora Saída cadastrada: " + horaSaida);
@@ -134,20 +127,20 @@ public class CatracaController {
 							LOGGER.info(mensagem);
 						}
 					} else{
-						retorno.put("mensagem", (Object) "Aluno não encontrado ou INATIVO na base de dados"
-								+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+						retorno.put("mensagem", (Object) "Aluno não encontrado ou INATIVO na base de dados. \n"
+								+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 						LOGGER.warn(retorno.get("mensagem"));
 					}
 				} else {
-					retorno.put("mensagem", (Object) "Número de cartão INATIVO ou não encontrado na base de dados,"
-							+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+					retorno.put("mensagem", (Object) "O numero da carteirinha ["+ linhaDigitavel +"] não foi encontrado na base de dados. \n"
+							+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 					LOGGER.warn(retorno.get("mensagem"));
+
 
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				retorno.put("mensagem", "Houve um erro ao registradar as informações"
-						+ " tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
+				retorno.put("mensagem", "Houve um erro ao registradar as informações. \n"
+						+ "Tente novamente ou entre em contato com a Equipe do Futuro-Alternativo.");
 				LOGGER.error(retorno.get("mensagem"), e);
 			}
 		}
@@ -170,25 +163,25 @@ public class CatracaController {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraEntrada());
 
-			mensagem = pessoa.getNome() + " Você está entrando no SEGUNDO HORÁRIO \nEntrada registrada: " + dataFormatada;
-			LOGGER.info(mensagem);  
-			
-			
+			mensagem = pessoa.getNome() + "\n Você está entrando no SEGUNDO HORÁRIO \nEntrada registrada: " + dataFormatada;
+			LOGGER.info(mensagem);
+
+
 		}else if (tipoMsg.equals("SAIDANOK")) {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraSaida());
 
-			mensagem = pessoa.getNome() + " você está saindo antes do fim das Aulas de hoje \nSaida registrada: "
+			mensagem = pessoa.getNome() + "\nVocê está saindo antes do fim das Aulas de hoje \nSaida registrada: "
 					+ dataFormatada;
 			LOGGER.info(mensagem);
 		} else if (tipoMsg.equals("SAIDAOK")) {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			String dataFormatada = df.format(evento.getDataHoraSaida());
 
-			mensagem = pessoa.getNome() + " Até a próxima aula \nSaida registrada: "
+			mensagem = "\t" + pessoa.getNome() + "\nAté a próxima aula! \nSaida registrada: "
 					+ dataFormatada;
 			LOGGER.info(mensagem);
-			
+
 		}else{
 			mensagem = "Não foi especificado tipo de mensagem";
 			LOGGER.warn(mensagem);
@@ -208,7 +201,7 @@ public class CatracaController {
 			plasticoEncontrado = plasticoDao.findByDigitableLine(linhaDigitavel);
 			return plasticoEncontrado;
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			LOGGER.error("Erro ao consultar plastico", e);
 			return null;
 		}
 	}
@@ -239,7 +232,7 @@ public class CatracaController {
 	private List<Evento> consultarEventosEntrada(Long pessoaId) {
 		List<Evento> eventos = new ArrayList<Evento>();
 		try {
-			eventos = eventoDao.findEventByPersonAndDate(pessoaId, Calendar.getInstance().getTime());
+			eventos = eventoDao.findEventByPersonAndDate(pessoaId, new Date());
 			return eventos;
 		} catch (Exception e) {
 			LOGGER.error("Erro!!", e);
